@@ -92,6 +92,8 @@ class Engine(gym.Env, gym.utils.EzPickle):
     by the config dict of the Engine() object.
 
     '''
+    
+    metadata = {"render.modes": ["human", "rgb_array"], "video.frames_per_second": 50}
 
     # Default configuration (this should not be nested since it gets copied)
     DEFAULT = {
