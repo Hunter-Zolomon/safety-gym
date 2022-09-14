@@ -289,6 +289,9 @@ class Engine(gym.Env, gym.utils.EzPickle):
         # For deterministic steps, set frameskip_binom_p = 1.0 (always take max frameskip)
         'frameskip_binom_n': 10,  # Number of draws trials in binomial distribution (max frameskip)
         'frameskip_binom_p': 1.0,  # Probability of trial return (controls distribution)
+        
+        # Default Recording Camera
+        'default_camera_id': 1,
 
         '_seed': None,  # Random state seed (avoid name conflict with self.seed)
     }
@@ -1429,7 +1432,10 @@ class Engine(gym.Env, gym.utils.EzPickle):
             else:
                 self.viewer = MjRenderContextOffscreen(self.sim)
                 self.viewer._hide_overlay = True
-                self.viewer.cam.fixedcamid = camera_id #self.model.camera_name2id(mode)
+                if camera_id is not None:
+                    self.viewer.cam.fixedcamid = camera_id #self.model.camera_name2id(mode)
+                else:
+                    self.viewer.cam.fixedcamid = self.default_camera_id
                 self.viewer.cam.type = const.CAMERA_FIXED
             self.viewer.render_swap_callback = self.render_swap_callback
             # Turn all the geom groups on
@@ -1440,6 +1446,8 @@ class Engine(gym.Env, gym.utils.EzPickle):
         if camera_id is not None:
             # Update camera if desired
             self.viewer.cam.fixedcamid = camera_id
+        else:
+            self.viewer.cam.fixedcamid = self.default_camera_id
 
         # Lidar markers
         if self.render_lidar_markers:
