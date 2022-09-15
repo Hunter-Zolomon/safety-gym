@@ -301,7 +301,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
         '_seed': None,  # Random state seed (avoid name conflict with self.seed)
     }
 
-    def __init__(self, config={}, render_mode: Optional[str] = None):
+    def __init__(self, config={}, render_mode = None):
         # First, parse configuration. Important note: LOTS of stuff happens in
         # parse, and many attributes of the class get set through setattr. If you
         # are trying to track down where an attribute gets initially set, and 
