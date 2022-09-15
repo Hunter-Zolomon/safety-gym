@@ -295,8 +295,9 @@ class Engine(gym.Env, gym.utils.EzPickle):
         'frameskip_binom_n': 10,  # Number of draws trials in binomial distribution (max frameskip)
         'frameskip_binom_p': 1.0,  # Probability of trial return (controls distribution)
         
-        # Default Recording Camera
+        # Recording Setup
         'default_camera_id': 1,
+        'render_mode': 'rgb_array',
 
         '_seed': None,  # Random state seed (avoid name conflict with self.seed)
     }
