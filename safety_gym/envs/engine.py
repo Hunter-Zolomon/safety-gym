@@ -1424,7 +1424,8 @@ class Engine(gym.Env, gym.utils.EzPickle):
             self.viewer.draw_pixels(self.save_obs_vision, 0, 0)
 
     def render(self,
-               camera_id=None,
+               mode=self.render_mode,
+               camera_id=self.default_camera_id,
                width=DEFAULT_WIDTH,
                height=DEFAULT_HEIGHT
                ):
