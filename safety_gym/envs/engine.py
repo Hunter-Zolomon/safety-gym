@@ -1320,7 +1320,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
         if self.render_mode == 'human':
             self.render()
         
-        return convert_to_terminated_truncated_step_api(self.obs(), reward, self.done, info)
+        return convert_to_terminated_truncated_step_api((self.obs(), reward, self.done, info))
 
     def reward(self):
         ''' Calculate the dense component of reward.  Call exactly once per step '''
