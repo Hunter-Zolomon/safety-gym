@@ -48,8 +48,8 @@ GROUP_CIRCLE = 6
 ORIGIN_COORDINATES = np.zeros(3)
 
 # Constant defaults for rendering frames for humans (not used for vision)
-DEFAULT_WIDTH = 256
-DEFAULT_HEIGHT = 256
+DEFAULT_WIDTH = 2048
+DEFAULT_HEIGHT = 2048
 
 class ResamplingError(AssertionError):
     ''' Raised when we fail to sample a valid distribution of objects or goals '''
