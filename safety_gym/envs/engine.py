@@ -863,7 +863,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
         self.world_config_dict = self.build_world_config()
 
         if self.world is None:
-            self.world = World(self.world_config_dict)
+            self.world = World(self.world_config_dict, render_mode=self.render_mode)
             self.world.reset()
             self.world.build()
         else:
