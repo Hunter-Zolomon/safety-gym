@@ -3,6 +3,7 @@
 import os
 import xmltodict
 import numpy as np
+from typing import Optional
 from copy import deepcopy
 from collections import OrderedDict
 from mujoco_py import const, load_model_from_path, load_model_from_xml, MjSim, MjViewer, MjRenderContextOffscreen
@@ -68,12 +69,13 @@ class World:
         'observe_vision': False,
     }
 
-    def __init__(self, config={}, render_context=None):
+    def __init__(self, config={}, render_mode: Optional[str] = None, render_context=None):
         ''' config - JSON string or dict of configuration.  See self.parse() '''
         self.parse(config)  # Parse configuration
         self.first_reset = True
         self.viewer = None
         self.render_context = render_context
+        self.render_mode = render_mode
         self.update_viewer_sim = False
         self.robot = Robot(self.robot_base)
 
@@ -313,8 +315,9 @@ class World:
         # set flag so that renderer knows to update sim
         self.update_viewer_sim = True
 
-    def render(self, mode='human'):
+    def render(self):
         ''' Render the environment to the screen '''
+        mode = self.render_mode
         if self.viewer is None:
             self.viewer = MjViewer(self.sim)
             # Turn all the geom groups on
