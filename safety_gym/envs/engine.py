@@ -3,6 +3,7 @@
 import gym
 import gym.spaces
 import numpy as np
+from typing import Optional
 from PIL import Image
 from copy import deepcopy
 from collections import OrderedDict
@@ -301,7 +302,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
         '_seed': None,  # Random state seed (avoid name conflict with self.seed)
     }
 
-    def __init__(self, config={}, render_mode = None):
+    def __init__(self, config={}, render_mode: Optional[str] = None):
         # First, parse configuration. Important note: LOTS of stuff happens in
         # parse, and many attributes of the class get set through setattr. If you
         # are trying to track down where an attribute gets initially set, and 
@@ -897,6 +898,9 @@ class Engine(gym.Env, gym.utils.EzPickle):
         # Reset stateful parts of the environment
         self.first_reset = False  # Built our first world successfully
 
+        if self.render_mode == 'human':
+            self.render()
+        
         # Return an observation
         return self.obs()
 
@@ -1312,6 +1316,9 @@ class Engine(gym.Env, gym.utils.EzPickle):
         if self.steps >= self.num_steps:
             self.done = True  # Maximum number of steps in an episode reached
 
+        if self.render_mode == 'human':
+            self.render()
+        
         return self.obs(), reward, self.done, info
 
     def reward(self):
@@ -1424,16 +1431,17 @@ class Engine(gym.Env, gym.utils.EzPickle):
             self.viewer.draw_pixels(self.save_obs_vision, 0, 0)
 
     def render(self,
-               mode=self.render_mode,
-               camera_id=self.default_camera_id,
+               camera_id=None,
                width=DEFAULT_WIDTH,
                height=DEFAULT_HEIGHT
                ):
         ''' Render the environment to the screen '''
 
-        if self.viewer is None or self.render_mode!=self._old_render_mode:
+        mode = self.render_mode
+        
+        if self.viewer is None or mode!=self._old_render_mode:
             # Set camera if specified
-            if self.render_mode == 'human':
+            if mode == 'human':
                 self.viewer = MjViewer(self.sim)
                 self.viewer.cam.fixedcamid = -1
                 self.viewer.cam.type = const.CAMERA_FREE
@@ -1448,7 +1456,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
             self.viewer.render_swap_callback = self.render_swap_callback
             # Turn all the geom groups on
             self.viewer.vopt.geomgroup[:] = 1
-            self._old_render_mode = self.render_mode
+            self._old_render_mode = mode
         self.viewer.update_sim(self.sim)
 
         if camera_id is not None:
@@ -1510,9 +1518,9 @@ class Engine(gym.Env, gym.utils.EzPickle):
             vision = np.array(vision, dtype='uint8')
             self.save_obs_vision = vision
 
-        if self.render_mode=='human':
+        if mode=='human':
             self.viewer.render()
-        elif self.render_mode=='rgb_array':
+        elif mode=='rgb_array':
             self.viewer.render(width, height)
             data = self.viewer.read_pixels(width, height, depth=False)
             self.viewer._markers[:] = []
